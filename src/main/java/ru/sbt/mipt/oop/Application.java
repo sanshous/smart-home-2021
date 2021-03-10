@@ -10,59 +10,21 @@ import static ru.sbt.mipt.oop.SensorEventType.*;
 
 public class Application {
 
-    public static void main(String... args) throws IOException {
-        // считываем состояние дома из файла
-        Gson gson = new Gson();
-        String json = new String(Files.readAllBytes(Paths.get("smart-home-1.js")));
-        SmartHome smartHome = gson.fromJson(json, SmartHome.class);
-        // начинаем цикл обработки событий
-        SensorEvent event = getNextSensorEvent();
-        while (event != null) {
-            System.out.println("Got event: " + event);
-            if (event.getType() == LIGHT_ON || event.getType() == LIGHT_OFF) {
-                // событие от источника света
-                for (Room room : smartHome.getRooms()) {
-                    for (Light light : room.getLights()) {
-                        if (light.getId().equals(event.getObjectId())) {
-                            if (event.getType() == LIGHT_ON) {
-                                light.setOn(true);
-                                System.out.println("Light " + light.getId() + " in room " + room.getName() + " was turned on.");
-                            } else {
-                                light.setOn(false);
-                                System.out.println("Light " + light.getId() + " in room " + room.getName() + " was turned off.");
-                            }
-                        }
-                    }
-                }
+    public static void main(String... args) {
+        try{
+            SmartHome smartHome = JsonToSmartHome("smart-home-1.js");
+            SensorEvent event = getNextSensorEvent();
+            while (event != null) {
+                System.out.println("Got event: " + event);
+                changeSmartHome c = changeSmartHome.valueOf(event.getType().getValue());
+                c.changeSmartHomeWithEvent(smartHome, event);
+                event = getNextSensorEvent();
             }
-            if (event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED) {
-                // событие от двери
-                for (Room room : smartHome.getRooms()) {
-                    for (Door door : room.getDoors()) {
-                        if (door.getId().equals(event.getObjectId())) {
-                            if (event.getType() == DOOR_OPEN) {
-                                door.setOpen(true);
-                                System.out.println("Door " + door.getId() + " in room " + room.getName() + " was opened.");
-                            } else {
-                                door.setOpen(false);
-                                System.out.println("Door " + door.getId() + " in room " + room.getName() + " was closed.");
-                                // если мы получили событие о закрытие двери в холле - это значит, что была закрыта входная дверь.
-                                // в этом случае мы хотим автоматически выключить свет во всем доме (это же умный дом!)
-                                if (room.getName().equals("hall")) {
-                                    for (Room homeRoom : smartHome.getRooms()) {
-                                        for (Light light : homeRoom.getLights()) {
-                                            light.setOn(false);
-                                            SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
-                                            sendCommand(command);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            event = getNextSensorEvent();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,4 +39,85 @@ public class Application {
         String objectId = "" + ((int) (10 * Math.random()));
         return new SensorEvent(sensorEventType, objectId);
     }
+
+    private static SmartHome JsonToSmartHome(String Filename) throws IOException{
+        Gson gson = new Gson();
+        String json = new String(Files.readAllBytes(Paths.get(Filename)));
+        SmartHome smartHome = gson.fromJson(json, SmartHome.class);
+        return smartHome;
+    }
+
+    private enum changeSmartHome {
+        LIGHT_ON {
+            void changeSmartHomeWithEvent(SmartHome smartHome, SensorEvent event) throws Exception {
+                SmartHome.changeThing c = SmartHome.changeThing.LIGHT;
+                RoomAndThing changedRoomAndThing = c.changeThingSmartHome(event.getObjectId(), true, smartHome);
+                if (changedRoomAndThing == null) {
+                    throw new Exception("There's no such Id");
+                }
+                System.out.println("Light " + changedRoomAndThing.getThing().
+                        getId() + " in room " + changedRoomAndThing.getRoom().
+
+                        getName() + " was turned on.");
+            }
+            },
+            LIGHT_OFF {
+            void changeSmartHomeWithEvent(SmartHome smartHome, SensorEvent event) throws Exception {
+                    SmartHome.changeThing c = SmartHome.changeThing.LIGHT;
+                    RoomAndThing changedRoomAndThing = c.changeThingSmartHome(event.getObjectId(), false, smartHome);
+                    if (changedRoomAndThing == null) {
+                        throw new Exception("There's no such Id");
+                    }
+                    System.out.println("Light " + changedRoomAndThing.getThing().
+
+                            getId() + " in room " + changedRoomAndThing.getRoom().
+
+                            getName() + " was turned off.");
+                }
+            },
+            DOOR_OPEN {
+                void changeSmartHomeWithEvent(SmartHome smartHome, SensorEvent event) throws Exception {
+                    SmartHome.changeThing c = SmartHome.changeThing.DOOR;
+                    RoomAndThing changedRoomAndThing = c.changeThingSmartHome(event.getObjectId(), true, smartHome);
+                    if (changedRoomAndThing == null) {
+                        throw new Exception("There's no such Id");
+                    }
+                    System.out.println("Door " + changedRoomAndThing.getThing().
+
+                            getId() + " in room " + changedRoomAndThing.getRoom().
+
+                            getName() + " was opened.");
+                }
+            },
+            DOOR_CLOSED {
+                void changeSmartHomeWithEvent(SmartHome smartHome, SensorEvent event) throws Exception {
+                    SmartHome.changeThing c = SmartHome.changeThing.DOOR;
+                    RoomAndThing changedRoomAndThing = c.changeThingSmartHome(event.getObjectId(), false, smartHome);
+                    if (changedRoomAndThing == null) {
+                        throw new Exception("There's no such Id");
+                    }
+                    System.out.println("Door " + changedRoomAndThing.getThing().
+
+                            getId() + " in room " + changedRoomAndThing.getRoom().
+
+                            getName() + " was closed.");
+                    if (changedRoomAndThing.getRoom().
+
+                            getName().
+
+                            equals("hall")) {
+                        for (Room homeRoom : smartHome.rooms) {
+                            for (Light light : homeRoom.getLights()) {
+                                SmartHome.changeThing a = SmartHome.changeThing.LIGHT;
+                                RoomAndThing changeThingSmart = a.changeThingSmartHome(light.getId(), false, smartHome);
+                                SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
+                                sendCommand(command);
+                            }
+                        }
+                    }
+                }
+            };
+
+            abstract void changeSmartHomeWithEvent(SmartHome smartHome, SensorEvent event) throws Exception;
+        }
 }

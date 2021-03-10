@@ -1,20 +1,12 @@
 package ru.sbt.mipt.oop;
 
-public class Light {
+public class Light extends Thing{
     private boolean isOn;
     private final String id;
 
-    public Light(String id, boolean isOn) {
+    Light( String id, boolean isOn) {
+        super(isOn, id);
         this.id = id;
-        this.isOn = isOn;
-    }
-
-    public boolean isOn() {
-        return isOn;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public void setOn(boolean on) {

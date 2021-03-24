@@ -1,15 +1,17 @@
 package ru.sbt.mipt.oop;
 
-public class Door extends Thing{
+public class Door{
     private final String id;
-    private boolean isOn;
+    private boolean isOpen;
 
     public Door(boolean isOpen, String id) {
-        super(isOpen, id);
+        this.isOpen = isOpen;
         this.id = id;
     }
 
     public void setOpen(boolean open) {
-        isOn = open;
+        this.isOpen = open;
     }
+
+    public String getId(){ return this.id; }
 }

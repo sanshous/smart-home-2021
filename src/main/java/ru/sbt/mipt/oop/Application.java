@@ -1,6 +1,7 @@
 package ru.sbt.mipt.oop;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Application {
 
@@ -8,7 +9,14 @@ public class Application {
         try{
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("smart-home-1.js");
             SensorEvent event = RandomSensorEvent.getNextSensorEvent();
-            EventHandler.handleAllEvents(event, smartHome);
+            EventHandler eventHandler = new EventHandler(
+                    Arrays.asList(
+                            new LightEventProcessor(),
+                            new DoorEventProcessor(),
+                            new HallDoorEventProcessor()
+                    )
+            );
+            eventHandler.handleAllEvents(event, smartHome);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {

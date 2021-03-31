@@ -1,18 +1,23 @@
 package ru.sbt.mipt.oop;
 
+import java.util.List;
+
 public class EventHandler {
-    public static void handleAllEvents(SensorEvent event, SmartHome smartHome) throws Exception {
+
+    private final List<EventProcessor> processors;
+
+    public EventHandler(List<EventProcessor> processors) {
+        this.processors = processors;
+    }
+
+    public void handleAllEvents(SensorEvent event, SmartHome smartHome) throws Exception {
         while (event != null) {
             System.out.println("Got event: " + event);
-            event = RandomSensorEvent.getNextSensorEvent();
-            if (event.getType().equals(SensorEventType.LIGHT_ON) || event.getType().equals(SensorEventType.LIGHT_OFF)){
-                LightEventProcessor lightEventProcessor = new LightEventProcessor();
-                lightEventProcessor.processEvent(smartHome, event);
-            } else if (event.getType().equals(SensorEventType.DOOR_CLOSED) ||
-            event.getType().equals(SensorEventType.DOOR_OPEN)) {
-                DoorEventProcessor doorEventProcessor = new DoorEventProcessor();
-                doorEventProcessor.processEvent(smartHome, event);
+            //event = RandomSensorEvent.getNextSensorEvent();
+            for (EventProcessor processor: processors) {
+                processor.processEvent(smartHome, event);
             }
+            event = null;
         }
     }
 }

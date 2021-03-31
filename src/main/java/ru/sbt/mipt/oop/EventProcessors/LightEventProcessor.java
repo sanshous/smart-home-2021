@@ -1,6 +1,23 @@
-package ru.sbt.mipt.oop;
+package ru.sbt.mipt.oop.EventProcessors;
 
-public class LightEventProcessor implements EventProcessor {
+import ru.sbt.mipt.oop.Light;
+import ru.sbt.mipt.oop.SensorEventType;
+import ru.sbt.mipt.oop.SmartHome;
+
+public class LightEventProcessor extends ProcessSensorDecorator implements EventProcessor {
+
+
+    public LightEventProcessor(SensorDecorator wrap) {
+        super(wrap);
+    }
+
+    public void alertAlarm(SmartHome smartHome) {
+        wrap.alertAlarm(smartHome);
+    }
+
+    public void sendSMS() {
+        wrap.sendSMS();
+    }
 
     private boolean isValid(SensorEventType eventType) {
         return eventType.getValue().equals(SensorEventType.LIGHT_ON.getValue()) ||
@@ -16,7 +33,6 @@ public class LightEventProcessor implements EventProcessor {
                 Light light = (Light) obj;
                 if (light.getId().equals(event.getObjectId())) {
                     light.setOn(isOn);
-                    //System.out.println(light.getId());
                 }
             }
         };

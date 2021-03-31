@@ -2,6 +2,7 @@ package ru.sbt.mipt.oop;
 
 import junit.framework.Assert;
 import org.junit.jupiter.api.Test;
+import ru.sbt.mipt.oop.EventProcessors.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,11 +16,12 @@ class LightEventProcessorTest {
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
             SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, "4");
+            SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
-                            new LightEventProcessor(),
+                            new LightEventProcessor(decorator),
                             new DoorEventProcessor(),
-                            new HallDoorEventProcessor()
+                            new HallDoorEventProcessor(decorator)
                     )
             );
             eventHandler.handleAllEvents(event, smartHome);
@@ -45,11 +47,12 @@ class LightEventProcessorTest {
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
             SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, "10");
+            SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
-                            new LightEventProcessor(),
+                            new LightEventProcessor(decorator),
                             new DoorEventProcessor(),
-                            new HallDoorEventProcessor()
+                            new HallDoorEventProcessor(decorator)
                     )
             );
             eventHandler.handleAllEvents(event, smartHome);

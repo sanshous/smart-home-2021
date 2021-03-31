@@ -1,14 +1,16 @@
 package ru.sbt.mipt.oop;
 
+import ru.sbt.mipt.oop.AlarmEvent.Alarm;
+import ru.sbt.mipt.oop.EventProcessors.Action;
+import ru.sbt.mipt.oop.EventProcessors.Actionable;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.ListIterator;
 
-import static ru.sbt.mipt.oop.SensorEventType.*;
-
-public class SmartHome implements Actionable{
+public class SmartHome implements Actionable {
     private Collection<Room> rooms;
+
+    private Alarm alarm;
 
     public SmartHome() {
         rooms = new ArrayList<>();
@@ -25,6 +27,8 @@ public class SmartHome implements Actionable{
     public Collection<Room> getRooms() {
         return rooms;
     }
+
+    public Alarm getAlarm() { return alarm; }
 
     @Override
     public void execute(Action action) {

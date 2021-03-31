@@ -1,6 +1,20 @@
-package ru.sbt.mipt.oop;
+package ru.sbt.mipt.oop.EventProcessors;
 
-public class HallDoorEventProcessor implements EventProcessor {
+import ru.sbt.mipt.oop.*;
+
+public class HallDoorEventProcessor extends ProcessSensorDecorator implements EventProcessor {
+
+    public HallDoorEventProcessor(SensorDecorator wrap) {
+        super(wrap);
+    }
+
+    public void alertAlarm(SmartHome smartHome) {
+        wrap.alertAlarm(smartHome);
+    }
+
+    public void sendSMS() {
+        wrap.sendSMS();
+    }
 
     private boolean isValid(SensorEventType eventType) {
         return eventType.getValue().equals(SensorEventType.DOOR_CLOSED.getValue());
@@ -12,7 +26,7 @@ public class HallDoorEventProcessor implements EventProcessor {
 
         Action actionTurningOff;
         actionTurningOff = (Actionable obj) -> {
-            if ( obj instanceof Light ) {
+            if ( obj instanceof Light) {
                 Light light = (Light) obj;
                 light.setOn(false);
                 SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());

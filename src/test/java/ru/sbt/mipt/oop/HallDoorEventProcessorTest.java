@@ -1,5 +1,6 @@
 package ru.sbt.mipt.oop;
 
+import com.coolcompany.smarthome.events.CCSensorEvent;
 import junit.framework.Assert;
 import org.junit.jupiter.api.Test;
 import ru.sbt.mipt.oop.EventProcessors.*;
@@ -13,16 +14,16 @@ class HallDoorEventProcessorTest {
     void processEventOpen() {
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
-            SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "4");
+            CCSensorEvent event = new CCSensorEvent(SensorEventType.DOOR_OPEN.getValue(), "4");
             SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
                             new LightEventProcessor(decorator),
                             new DoorEventProcessor(),
                             new HallDoorEventProcessor(decorator)
-                    )
+                    ), smartHome
             );
-            eventHandler.handleAllEvents(event, smartHome);
+            eventHandler.handleEvent(event);
             boolean expected = true;
             boolean actual = false;
             for ( Room room: smartHome.getRooms() ) {
@@ -44,16 +45,16 @@ class HallDoorEventProcessorTest {
     void processEventClosed(){
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
-            SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, "4");
+            CCSensorEvent event = new CCSensorEvent(SensorEventType.DOOR_CLOSED.getValue(), "4");
             SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
                             new LightEventProcessor(decorator),
                             new DoorEventProcessor(),
                             new HallDoorEventProcessor(decorator)
-                    )
+                    ), smartHome
             );
-            eventHandler.handleAllEvents(event, smartHome);
+            eventHandler.handleEvent(event);
             boolean expected = false;
             boolean actual = true;
             for ( Room room: smartHome.getRooms() ) {

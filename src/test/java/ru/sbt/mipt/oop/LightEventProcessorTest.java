@@ -1,5 +1,6 @@
 package ru.sbt.mipt.oop;
 
+import com.coolcompany.smarthome.events.CCSensorEvent;
 import junit.framework.Assert;
 import org.junit.jupiter.api.Test;
 import ru.sbt.mipt.oop.EventProcessors.*;
@@ -15,16 +16,16 @@ class LightEventProcessorTest {
     void processEvent() {
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
-            SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, "4");
+            CCSensorEvent event = new CCSensorEvent(SensorEventType.LIGHT_ON.getValue(), "4");
             SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
                             new LightEventProcessor(decorator),
                             new DoorEventProcessor(),
                             new HallDoorEventProcessor(decorator)
-                    )
+                    ), smartHome
             );
-            eventHandler.handleAllEvents(event, smartHome);
+            eventHandler.handleEvent(event);
             boolean expected = true;
             boolean actual = false;
             for ( Room room: smartHome.getRooms() ) {
@@ -46,16 +47,16 @@ class LightEventProcessorTest {
     void processEventNoId() throws Exception{
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
-            SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, "10");
+            CCSensorEvent event = new CCSensorEvent(SensorEventType.LIGHT_ON.getValue(), "10");
             SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
                             new LightEventProcessor(decorator),
                             new DoorEventProcessor(),
                             new HallDoorEventProcessor(decorator)
-                    )
+                    ), smartHome
             );
-            eventHandler.handleAllEvents(event, smartHome);
+            eventHandler.handleEvent(event);
         } catch (Exception e) {
             assertEquals("There's no such Id", e.getMessage());
         }

@@ -1,5 +1,6 @@
 package ru.sbt.mipt.oop.EventProcessors;
 
+import com.coolcompany.smarthome.events.CCSensorEvent;
 import ru.sbt.mipt.oop.*;
 
 public class HallDoorEventProcessor extends ProcessSensorDecorator implements EventProcessor {
@@ -16,13 +17,13 @@ public class HallDoorEventProcessor extends ProcessSensorDecorator implements Ev
         wrap.sendSMS();
     }
 
-    private boolean isValid(SensorEventType eventType) {
-        return eventType.getValue().equals(SensorEventType.DOOR_CLOSED.getValue());
+    private boolean isValid(CCSensorEvent event) {
+        return event.getEventType().equals(SensorEventType.DOOR_CLOSED.getValue());
     }
 
-    public void processEvent(SmartHome smartHome, SensorEvent sensorEvent) {
+    public void processEvent(SmartHome smartHome, CCSensorEvent sensorEvent) {
 
-        if(!isValid(sensorEvent.getType())) return;
+        if(!isValid(sensorEvent)) return;
 
         Action actionTurningOff;
         actionTurningOff = (Actionable obj) -> {

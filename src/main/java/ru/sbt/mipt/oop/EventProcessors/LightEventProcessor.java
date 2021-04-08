@@ -1,5 +1,6 @@
 package ru.sbt.mipt.oop.EventProcessors;
 
+import com.coolcompany.smarthome.events.CCSensorEvent;
 import ru.sbt.mipt.oop.Light;
 import ru.sbt.mipt.oop.SensorEventType;
 import ru.sbt.mipt.oop.SmartHome;
@@ -19,19 +20,20 @@ public class LightEventProcessor extends ProcessSensorDecorator implements Event
         wrap.sendSMS();
     }
 
-    private boolean isValid(SensorEventType eventType) {
-        return eventType.getValue().equals(SensorEventType.LIGHT_ON.getValue()) ||
-                eventType.getValue().equals(SensorEventType.LIGHT_OFF.getValue());
+    private boolean isValid(CCSensorEvent eventType) {
+        return eventType.getEventType().equals(SensorEventType.LIGHT_ON.getValue()) ||
+                eventType.getEventType().equals(SensorEventType.LIGHT_OFF.getValue());
     }
 
-    public void processEvent(SmartHome smartHome, SensorEvent event) {
-        if(!isValid(event.getType())) return;
-        boolean isOn = (event.getType() == SensorEventType.LIGHT_ON);
+    @Override
+    public void processEvent(SmartHome smartHome, CCSensorEvent sensorEvent) throws Exception {
+        if(!isValid(sensorEvent)) return;
+        boolean isOn = (sensorEvent.getEventType() == SensorEventType.LIGHT_ON.getValue());
         Action action;
         action = (Actionable obj) -> {
             if (obj instanceof Light) {
                 Light light = (Light) obj;
-                if (light.getId().equals(event.getObjectId())) {
+                if (light.getId().equals(sensorEvent.getObjectId())) {
                     light.setOn(isOn);
                 }
             }

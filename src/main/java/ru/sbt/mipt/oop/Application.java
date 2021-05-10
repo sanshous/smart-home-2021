@@ -7,7 +7,8 @@ public class Application {
 
     public static void main(String... args) {
         try{
-            SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("smart-home-1.js");
+            JsonToSmartHome jsonToSmartHome = new JsonToSmartHome();
+            SmartHome smartHome = jsonToSmartHome.getSmarthomeFromFile("smart-home-1.js");
             SensorEvent event = RandomSensorEvent.getNextSensorEvent();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(

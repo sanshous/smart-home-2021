@@ -16,7 +16,8 @@ public class HallDoorEventProcessor implements EventProcessor {
                 Light light = (Light) obj;
                 light.setOn(false);
                 SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
-                SensorCommandMessage.sendCommand(command);
+                SensorCommandMessage sensorCommandMessage = new SensorCommandMessage();
+                sensorCommandMessage.sendCommand(command);
             }
         };
 

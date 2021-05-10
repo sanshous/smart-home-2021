@@ -13,11 +13,10 @@ public class EventHandler {
     public void handleAllEvents(SensorEvent event, SmartHome smartHome) throws Exception {
         while (event != null) {
             System.out.println("Got event: " + event);
-            //event = RandomSensorEvent.getNextSensorEvent();
             for (EventProcessor processor: processors) {
                 processor.processEvent(smartHome, event);
             }
-            event = null;
+            event = RandomSensorEvent.getNextSensorEvent();
         }
     }
 }

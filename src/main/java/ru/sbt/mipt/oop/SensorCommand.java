@@ -16,4 +16,5 @@ public class SensorCommand {
                 ", objectId='" + objectId + '\'' +
                 '}';
     }
+
 }

@@ -1,5 +1,6 @@
 package ru.sbt.mipt.oop.AlarmEvent;
 
+import ru.sbt.mipt.oop.EventProcessors.EventProcessor;
 import ru.sbt.mipt.oop.EventProcessors.SensorEvent;
 import ru.sbt.mipt.oop.SensorEventType;
 import ru.sbt.mipt.oop.SmartHome;
@@ -13,4 +14,5 @@ public class AlarmEventProcessor {
             smartHome.getAlarm().deactivate(event.getCode());
         }
     }
+
 }

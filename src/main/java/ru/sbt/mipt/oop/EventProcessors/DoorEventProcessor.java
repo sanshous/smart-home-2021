@@ -2,15 +2,7 @@ package ru.sbt.mipt.oop.EventProcessors;
 
 import ru.sbt.mipt.oop.*;
 
-public class DoorEventProcessor implements EventProcessor, SensorDecorator {
-
-    public void alertAlarm(SmartHome smartHome) {
-        smartHome.getAlarm().alert();
-    }
-
-    public void sendSMS() {
-        System.out.println("Sending sms");
-    }
+public class DoorEventProcessor implements EventProcessor {
 
     private boolean isValid(SensorEventType eventType) {
         return eventType.getValue().equals(SensorEventType.DOOR_OPEN.getValue()) ||

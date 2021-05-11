@@ -1,22 +1,28 @@
 package ru.sbt.mipt.oop.AlarmEvent;
 
-public class AlarmAlert extends AlarmState {
-    public AlarmAlert(Alarm alarm) {
-        super(alarm);
+public class AlarmAlert implements AlarmState {
+    private String activatingCode;
+
+    private String deactivatingCode;
+
+    public AlarmAlert(String activatingCode, String deactivatingCode) {
+        this.activatingCode = activatingCode;
+        this.deactivatingCode = deactivatingCode;
     }
 
     @Override
-    public void activate(String code) {
-        return;
+    public AlarmState activate(String code) {
+        return this;
     }
 
     @Override
-    public void deactivate(String code) {
-        return;
+    public AlarmState deactivate(String code) {
+        return this;
     }
 
     @Override
-    public void alert() {
+    public AlarmState alert() {
         System.out.println("ALARM!");
+        return this;
     }
 }

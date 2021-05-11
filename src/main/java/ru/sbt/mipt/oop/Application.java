@@ -11,12 +11,11 @@ public class Application {
         try{
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("smart-home-1.js");
             SensorEvent event = RandomSensorEvent.getNextSensorEvent();
-            SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
-                            new LightEventProcessor(decorator),
-                            new DoorEventProcessor(),
-                            new HallDoorEventProcessor(decorator)
+                            new AlarmDecorator(new LightEventProcessor()),
+                            new AlarmDecorator(new DoorEventProcessor()),
+                            new AlarmDecorator(new HallDoorEventProcessor())
                     )
             );
             eventHandler.handleAllEvents(event, smartHome);

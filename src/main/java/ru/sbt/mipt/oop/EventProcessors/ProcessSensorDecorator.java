@@ -1,20 +1,16 @@
 package ru.sbt.mipt.oop.EventProcessors;
 
-import ru.sbt.mipt.oop.EventProcessors.SensorDecorator;
 import ru.sbt.mipt.oop.SmartHome;
 
-public class ProcessSensorDecorator implements SensorDecorator {
-    protected SensorDecorator wrap;
+public class ProcessSensorDecorator implements EventProcessor {
+    private EventProcessor wrappee;
 
-    ProcessSensorDecorator(SensorDecorator wrap) {
-        this.wrap = wrap;
+    ProcessSensorDecorator(EventProcessor wrappee) {
+        this.wrappee = wrappee;
     }
 
-    public void sendSMS() {
-        wrap.sendSMS();
-    }
-
-    public void alertAlarm(SmartHome smartHome) {
-        wrap.alertAlarm(smartHome);
+    @Override
+    public void processEvent(SmartHome smartHome, SensorEvent sensorEvent) throws Exception {
+        wrappee.processEvent(smartHome, sensorEvent);
     }
 }

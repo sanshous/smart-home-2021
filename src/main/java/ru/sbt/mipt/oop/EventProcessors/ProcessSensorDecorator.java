@@ -4,17 +4,14 @@ import ru.sbt.mipt.oop.EventProcessors.SensorDecorator;
 import ru.sbt.mipt.oop.SmartHome;
 
 public class ProcessSensorDecorator implements SensorDecorator {
-    protected SensorDecorator wrap;
+    private EventProcessor wrap;
 
-    ProcessSensorDecorator(SensorDecorator wrap) {
+    public ProcessSensorDecorator(EventProcessor wrap) {
         this.wrap = wrap;
     }
 
-    public void sendSMS() {
-        wrap.sendSMS();
-    }
-
-    public void alertAlarm(SmartHome smartHome) {
-        wrap.alertAlarm(smartHome);
+    @Override
+    public void processEvent(SmartHome smartHome, SensorEvent sensorEvent) {
+            wrap.processEvent(smartHome, sensorEvent);
     }
 }

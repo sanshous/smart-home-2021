@@ -4,20 +4,7 @@ import ru.sbt.mipt.oop.Light;
 import ru.sbt.mipt.oop.SensorEventType;
 import ru.sbt.mipt.oop.SmartHome;
 
-public class LightEventProcessor extends ProcessSensorDecorator implements EventProcessor {
-
-
-    public LightEventProcessor(SensorDecorator wrap) {
-        super(wrap);
-    }
-
-    public void alertAlarm(SmartHome smartHome) {
-        wrap.alertAlarm(smartHome);
-    }
-
-    public void sendSMS() {
-        wrap.sendSMS();
-    }
+public class LightEventProcessor implements EventProcessor {
 
     private boolean isValid(SensorEventType eventType) {
         return eventType.getValue().equals(SensorEventType.LIGHT_ON.getValue()) ||

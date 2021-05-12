@@ -10,11 +10,12 @@ public enum SensorEventType {
 
     private String value;
 
-    private SensorEventType(String value) {
+    SensorEventType(String value) {
         this.value = value;
     }
 
     public String getValue() {
         return value;
     }
+
 }

@@ -1,5 +1,6 @@
 package ru.sbt.mipt.oop;
 
+
 import com.coolcompany.smarthome.events.CCSensorEvent;
 import junit.framework.Assert;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ class DoorEventProcessorTest {
     void processEvent() {
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
-            CCSensorEvent event = new CCSensorEvent(SensorEventType.DOOR_OPEN.getValue(), "2");
+            SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "2");
             SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(
@@ -47,7 +48,7 @@ class DoorEventProcessorTest {
     void processEventNoId() throws Exception{
         try {
             SmartHome smartHome = JsonToSmartHome.getSmarthomeFromJson("output.js");
-            CCSensorEvent event = new CCSensorEvent(SensorEventType.DOOR_OPEN.getValue(), "10");
+            SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "10");
             SensorDecorator decorator = new DoorEventProcessor();
             EventHandler eventHandler = new EventHandler(
                     Arrays.asList(

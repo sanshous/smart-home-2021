@@ -5,7 +5,7 @@ import ru.sbt.mipt.oop.SmartHome;
 
 import java.util.List;
 
-public class EventHandler implements com.coolcompany.smarthome.events.EventHandler {
+public class EventHandler {
 
     private final SmartHome smartHome;
 
@@ -16,8 +16,7 @@ public class EventHandler implements com.coolcompany.smarthome.events.EventHandl
         this.smartHome = smartHome;
     }
 
-    @Override
-    public void handleEvent(CCSensorEvent event) {
+    public void handleEvent(SensorEvent event) {
         while (event != null) {
             System.out.println("Got event: " + event);
             for (EventProcessor processor: processors) {
@@ -27,7 +26,7 @@ public class EventHandler implements com.coolcompany.smarthome.events.EventHandl
                     e.printStackTrace();
                 }
             }
-            event = null;
+            event = RandomSensorEvent.getNextSensorEvent();
         }
     }
 }

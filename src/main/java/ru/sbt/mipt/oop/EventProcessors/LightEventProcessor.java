@@ -26,7 +26,7 @@ public class LightEventProcessor extends ProcessSensorDecorator implements Event
     }
 
     @Override
-    public void processEvent(SmartHome smartHome, CCSensorEvent sensorEvent) throws Exception {
+    public void processEvent(SmartHome smartHome, CCSensorEvent sensorEvent) {
         if(!isValid(sensorEvent)) return;
         boolean isOn = (sensorEvent.getEventType() == SensorEventType.LIGHT_ON.getValue());
         Action action;

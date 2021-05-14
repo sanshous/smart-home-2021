@@ -6,7 +6,7 @@ import ru.sbt.mipt.oop.SmartHome;
 public class ProcessSensorDecorator implements SensorDecorator {
     protected SensorDecorator wrap;
 
-    ProcessSensorDecorator(SensorDecorator wrap) {
+    public ProcessSensorDecorator(SensorDecorator wrap) {
         this.wrap = wrap;
     }
 

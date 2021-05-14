@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import rc.RemoteControl;
 import rc.RemoteControlRegistry;
 import ru.sbt.mipt.oop.EventProcessors.*;
+import ru.sbt.mipt.oop.command.Command;
 import ru.sbt.mipt.oop.command.MappedRemoteControl;
 
 import java.util.Arrays;
+import java.util.Map;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -19,17 +21,19 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    SensorDecorator processorSensorDecorator(EventProcessor processor) {
-        return new ProcessSensorDecorator(processor);
+    ProcessSensorDecorator processSensorDecorator(SensorDecorator decorator) {
+        return new ProcessSensorDecorator(decorator);
     }
 
     @Bean
-    RemoteControl mapRemoteControl() {
-        return new MappedRemoteControl();
+    RemoteControl mapRemoteControl(Map<String, Command> commandMap) {
+        return new MappedRemoteControl(commandMap);
     }
 
     @Bean
-    RemoteControlRegistry remoteControlRegistry() {
-        return new RemoteControlRegistry();
+    RemoteControlRegistry remoteControlRegistry(RemoteControl remoteControl) {
+        RemoteControlRegistry remoteControlRegistry = new RemoteControlRegistry();
+        remoteControlRegistry.registerRemoteControl(remoteControl, "id");
+        return remoteControlRegistry;
     }
 }
